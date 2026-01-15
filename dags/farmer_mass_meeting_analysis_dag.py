@@ -25,7 +25,7 @@ import analyzer  # noqa: E402
 
 # --- CONFIGURACIÓN ---
 # SNOWFLAKE_CONN_ID = "CONN_SNOWFLAKE"  # Temporalmente deshabilitado
-GOOGLE_CREDS_VAR_KEY = "google_service_account_farmer_mass"
+GOOGLE_CREDS_VAR_KEY = "google_sheet_creds_upload_v2"
 DRIVE_FOLDER_URL_VAR_KEY = "farmer_mass_drive_folder_url"
 
 
@@ -69,13 +69,13 @@ def farmer_mass_analysis_pipeline():
 
         os.environ["GOOGLE_SERVICE_ACCOUNT_JSON"] = creds_json
 
-        # API LLM configuration
-        api_key = Variable.get("llm_api_key", default_var=None)
-        if not api_key:
-            raise ValueError("Variable 'llm_api_key' no encontrada")
-
-        os.environ["API_KEY"] = api_key
-        os.environ["BASE_URL"] = Variable.get("llm_base_url", default_var="https://rappi.litellm-prod.ai/v1")
+        # API LLM configuration - Core LLM Proxy de Rappi
+        # El proxy inyecta automáticamente las credenciales de OpenAI
+        os.environ["API_KEY"] = Variable.get("llm_api_key", default_var="dummykey")
+        os.environ["BASE_URL"] = Variable.get(
+            "llm_base_url",
+            default_var="https://core-llm-proxy-external.security.rappi.com/api/core-llm-proxy/openai/v1"
+        )
         os.environ["MODEL"] = Variable.get("llm_model", default_var="gpt-4o-mini")
 
         print("Entorno configurado correctamente")

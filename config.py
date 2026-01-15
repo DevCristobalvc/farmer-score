@@ -11,8 +11,9 @@ BASE_DIR = Path(__file__).parent
 PROMPTS_DIR = BASE_DIR / "prompts"
 
 # Configuración de la API (se cargan desde Airflow Variables)
-API_KEY = os.getenv("API_KEY", "")
-BASE_URL = os.getenv("BASE_URL", "https://rappi.litellm-prod.ai/v1")
+# Core LLM Proxy de Rappi - No requiere API key real desde Airflow
+API_KEY = os.getenv("API_KEY", "dummykey")
+BASE_URL = os.getenv("BASE_URL", "https://core-llm-proxy-external.security.rappi.com/api/core-llm-proxy/openai/v1")
 MODEL = os.getenv("MODEL", "gpt-4o-mini")
 
 # Parámetros del modelo

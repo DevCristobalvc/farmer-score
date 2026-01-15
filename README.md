@@ -126,13 +126,12 @@ Si ya tienes una cuenta de servicio con permisos de Drive/Docs, usa ese JSON.
 
 | Key | Value | Descripción |
 |-----|-------|-------------|
-| `google_service_account_farmer_mass` | `{JSON completo}` | Service Account JSON de Google |
-| `llm_api_key` | `tu-api-key` | API Key para LLM |
+| `google_sheet_creds_upload_v2` | `{JSON completo}` | Service Account JSON de Google |
 
 **Via CLI:**
 ```bash
 # Google Service Account
-airflow variables set google_service_account_farmer_mass '{
+airflow variables set google_sheet_creds_upload_v2 '{
   "type": "service_account",
   "project_id": "your-project",
   "private_key_id": "...",
@@ -140,23 +139,28 @@ airflow variables set google_service_account_farmer_mass '{
   "client_email": "farmer-mass-analyzer@your-project.iam.gserviceaccount.com",
   ...
 }'
-
-# API Key
-airflow variables set llm_api_key "your-api-key-here"
 ```
 
 #### Variables Opcionales (con defaults)
 
 ```bash
-# URL de carpeta de Drive
-airflow variables set farmer_mass_drive_folder_url "https://drive.google.com/drive/folders/1iLJ8xFfYlRSbwaAtmthFQD8PT7AQsJzC"
+# URL de carpeta de Drive (opcional)
+airflow variables set farmer_mass_drive_folder_url "https://drive.google.com/drive/folders/YOUR_FOLDER_ID"
 
-# Base URL de API
-airflow variables set llm_base_url "https://rappi.litellm-prod.ai/v1"
+# Las siguientes variables son opcionales - Core LLM Proxy ya tiene defaults correctos
+# Solo configúralas si necesitas cambiar país o modelo
 
-# Modelo LLM
+# Base URL de API (default: CO - Colombia)
+airflow variables set llm_base_url "https://core-llm-proxy-external.security.rappi.com/api/core-llm-proxy/openai/v1"
+
+# API Key (default: dummykey - el proxy no requiere key real)
+airflow variables set llm_api_key "dummykey"
+
+# Modelo LLM (default: gpt-4o-mini)
 airflow variables set llm_model "gpt-4o-mini"
 ```
+
+**Nota:** El Core LLM Proxy de Rappi inyecta automáticamente las credenciales de OpenAI. No necesitas API key real.
 
 ### 4. Compartir Carpeta de Drive
 
@@ -193,11 +197,13 @@ La carpeta de Google Drive debe ser compartida con la cuenta de servicio:
 
 | Variable | Requerida | Default | Descripción |
 |----------|-----------|---------|-------------|
-| `google_service_account_farmer_mass` | ✅ Sí | - | JSON de Service Account |
-| `llm_api_key` | ✅ Sí | - | API Key para LLM |
+| `google_sheet_creds_upload_v2` | ✅ Sí | - | JSON de Service Account de Google |
 | `farmer_mass_drive_folder_url` | ❌ No | URL predefinida | Carpeta raíz de Drive |
-| `llm_base_url` | ❌ No | `https://rappi.litellm-prod.ai/v1` | Base URL de API |
-| `llm_model` | ❌ No | `gpt-4o-mini` | Modelo LLM a usar |
+| `llm_api_key` | ❌ No | `dummykey` | API Key (el proxy no requiere real) |
+| `llm_base_url` | ❌ No | Core LLM Proxy CO | Base URL de API (Core LLM Proxy) |
+| `llm_model` | ❌ No | `gpt-4o-mini` | Modelo OpenAI a usar |
+
+**Nota:** El proyecto usa el **Core LLM Proxy de Rappi** que inyecta automáticamente credenciales de OpenAI. Ver [documentación del proxy](https://confluence.rappi.com/display/TECH/Core+LLM+Proxy).
 
 ### Estructura de Carpetas en Drive
 
@@ -310,7 +316,7 @@ python verify_setup.py
 
 ## Troubleshooting
 
-### Error: "Variable 'google_service_account_farmer_mass' no encontrada"
+### Error: "Variable 'google_sheet_creds_upload_v2' no encontrada"
 - Verifica que la variable esté creada en **Admin** → **Variables**
 - Revisa que el nombre sea exactamente igual (case-sensitive)
 
