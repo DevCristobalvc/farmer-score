@@ -1,0 +1,25 @@
+# Meeting Analyzer - Rappi Hunters (Airflow Version)
+# Dependencias del proyecto
+
+# Core dependencies
+requests==2.31.0
+python-dotenv==1.0.0
+
+# Google API
+google-auth==2.23.4
+google-auth-oauthlib==1.1.0
+google-auth-httplib2==0.1.1
+google-api-python-client==2.108.0
+
+# Snowflake
+snowflake-connector-python==3.6.0
+
+# Airflow (para desarrollo local - en producción viene con Airflow)
+# apache-airflow==2.7.3
+# apache-airflow-providers-snowflake==5.1.0
+# apache-airflow-providers-google==10.10.1
+
+# Development dependencies (optional)
+pytest==7.4.3
+black==23.12.1
+flake8==7.0.0
